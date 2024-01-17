@@ -59,7 +59,7 @@ def inserir_banco(i):
             cur.execute(query, (i,))
             print("Cadastro do Banco feito!")
 
-# inserir_banco("Itaú")
+#inserir_banco("Itaú")
 
 # Lançamentos
 def inserir_lancamento(i, j, k, l, m, n, o):
@@ -113,10 +113,26 @@ def deletar_lancamento(i):
         print("Lançamento deletado.")
 
 #deletar_subCategoria(5)
+        
+# Alterar dados------------------------------------
 
 # Ver Dados----------------------------------------
 
-def ver_dados():
+# Ver Categoria
+def ver_dadosCategoria():
+    lista = []
+
+    with con:
+        cur = con.cursor()
+        cur.execute("SELECT * FROM Categoria")
+        linha = cur.fetchall()
+        for l in linha:
+            lista.append(l)
+
+    return lista
+
+# Ver Sub-Categoria
+def ver_dadosSubCategoria():
     lista = []
 
     with con:
@@ -128,4 +144,30 @@ def ver_dados():
 
     return lista
 
-#print(ver_dados())
+# Ver Bancos
+def ver_dadosBanco():
+    lista = []
+
+    with con:
+        cur = con.cursor()
+        cur.execute("SELECT * FROM Banco")
+        linha = cur.fetchall()
+        for l in linha:
+            lista.append(l)
+
+    return lista
+
+# Ver Lançamentos
+def ver_dadosLancamento():
+    lista = []
+
+    with con:
+        cur = con.cursor()
+        cur.execute("SELECT * FROM Lancamento")
+        linha = cur.fetchall()
+        for l in linha:
+            lista.append(l)
+
+    return lista
+
+print(ver_dadosBanco())
