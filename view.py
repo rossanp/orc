@@ -3,14 +3,14 @@ import sqlite3 as lite
 # Criando conexão com o banco
 con = lite.connect('dados.db')
 
-# Inserção de dados
+# Inserção de dados------------------------------------
 
 # Categorias
 def inserir_categoria(i):
     with con:
         cur = con.cursor()
         item = "SELECT nome FROM Categoria WHERE nome = ?"
-        cur.execute(item, (i,))
+        cur.execute(item, (i,)) # Parâmetro passado em forma de tuplas
         result = cur.fetchall()
         if len(result)!=0:
             print("Categoria já existe.")
@@ -74,13 +74,54 @@ def inserir_lancamento(i, j, k, l, m, n, o):
 
 #inserir_lancamento("16/01/2024", "Saaetri", -24.63, "Despesa", "Moradia", "Luz", "Itaú")
 
-#Ver Dados
+# Deletar dados------------------------------------
+
+# Deletar Categoria
+def deletar_categoria(i):
+    with con:
+        cur = con.cursor()
+
+        query = "DELETE FROM Categoria WHERE id = ?"
+        cur.execute(query, (i,))
+        print("Categoria deletada.")
+        
+# Deletar Sub-Categoria
+def deletar_subCategoria(i):
+    with con:
+        cur = con.cursor()
+
+        query = "DELETE FROM SubCategoria WHERE id = ?"
+        cur.execute(query, (i,))
+        print("Sub-Categoria deletada.")
+        
+# Deletar Banco
+def deletar_banco(i):
+    with con:
+        cur = con.cursor()
+
+        query = "DELETE FROM Banco WHERE id = ?"
+        cur.execute(query, (i,))
+        print("Banco deletado.")
+        
+# Deletar Lançamento
+def deletar_lancamento(i):
+    with con:
+        cur = con.cursor()
+
+        query = "DELETE FROM Lançamento WHERE id = ?"
+        cur.execute(query, (i,))
+        print("Lançamento deletado.")
+
+#deletar_subCategoria(5)
+
+# Ver Dados----------------------------------------
+
 def ver_dados():
     lista = []
 
     with con:
         cur = con.cursor()
-        cur.execute("SELECT * FROM Lancamento")
+        cur.execute("SELECT * FROM SubCategoria")
         linha = cur.fetchall()
         for l in linha:
             lista.append(l)
