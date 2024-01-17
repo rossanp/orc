@@ -17,7 +17,7 @@ with con:
 # Tabela Banco
 with con:
     cur = con.cursor()
-    cur.execute("CREATE TABLE Banco(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, nome TEXT, saldoinicial DECIMAL)")
+    cur.execute("CREATE TABLE Banco(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, nome TEXT, saldoinicial Numeric(10,2))")
     
 # Tabela Lançamento
 with con:
