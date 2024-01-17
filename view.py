@@ -20,7 +20,7 @@ def inserir_categoria(i):
             cur.execute(query, (i,))
             print("Cadastro da Categoria feita!")
 
-# inserir_categoria("Alimentação")
+#inserir_categoria("Pessoal")
             
 # Sub-categorias
 def inserir_subCategoria(i, j):
@@ -40,7 +40,7 @@ def inserir_subCategoria(i, j):
             cur.execute(query, (i, j))
             print("Cadastro da Sub-Categoria feita!")
 
-# inserir_subCategoria("Moradia", "Luz")
+#inserir_subCategoria("Pessoal", "Presente")
 
 # Bancos
 def inserir_banco(i):
@@ -59,7 +59,7 @@ def inserir_banco(i):
             cur.execute(query, (i,))
             print("Cadastro do Banco feito!")
 
-#inserir_banco("Itaú")
+#inserir_banco("Bradesco")
 
 # Lançamentos
 def inserir_lancamento(i, j, k, l, m, n, o):
@@ -115,6 +115,51 @@ def deletar_lancamento(i):
 #deletar_subCategoria(5)
         
 # Alterar dados------------------------------------
+
+# Alterar dados da categoria
+def alterar_categoria(i, j):
+    with con:
+        cur = con.cursor()
+        query = "SELECT nome FROM Categoria WHERE nome = ?"
+        cur.execute(query, (j,))
+        result = cur.fetchall()
+        if len(result) != 0:
+            cur.execute(query, (i,))
+            result1 = cur.fetchall()
+            if len(result1) == 0:
+                query = "UPDATE Categoria SET nome = ? WHERE nome = ?"
+                cur.execute(query, (i, j))
+                print("Categoria alterada.")
+            else:
+                print("Categoria já existe")
+        else:
+            print("Categoria não existe")
+
+#alterar_categoria("Pessoal", "Tecnologia")
+            
+# Alterar dados da sub-categoria
+def alterar_SubCategoria(i, j):
+    with con:
+        cur = con.cursor()
+        query = "SELECT nome FROM SubCategoria WHERE nome = ?"
+        cur.execute(query, (j,))
+        result = cur.fetchall()
+        if len(result) != 0:
+            cur.execute(query, (i,))
+            result1 = cur.fetchall()
+            if len(result1) == 0:
+                query = "UPDATE SubCategoria SET nome = ? WHERE nome = ?"
+                cur.execute(query, (i, j))
+                print("Sub-Categoria alterada.")
+            else:
+                print("Sub-Categoria já existe", result)
+        else:
+            print("Sub-Categoria não existe", result)
+
+#alterar_SubCategoria("Internet", "Presente")
+            
+# Alterar dados do banco
+
 
 # Ver Dados----------------------------------------
 
