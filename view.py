@@ -25,7 +25,7 @@ def inserir_categoria(nome):
             cur.execute(query, (nome,))
             print("Cadastro da Categoria feita!")
 
-#inserir_categoria("Investimento")
+#inserir_categoria("Moradia")
             
 # Sub-categorias
 def inserir_subCategoria(categoria,
@@ -47,7 +47,7 @@ def inserir_subCategoria(categoria,
         else:
             print("Categoria não existe.")
 
-#inserir_subCategoria("Moradia", "Água")
+#inserir_subCategoria("Pessoal", "Presente")
 
 # Bancos
 def inserir_banco(nome):
@@ -94,13 +94,19 @@ def inserir_lancamento(data,
 # Deletar dados------------------------------------
 
 # Deletar Categoria
-def deletar_categoria(i):
+def deletar_categoria(nome):
     with con:
-        cur = con.cursor()
+        cur.execute(item_categoria, (nome,))
+        result = cur.fetchone()
 
-        query = "DELETE FROM Categoria WHERE id = ?"
-        cur.execute(query, (i,))
-        print("Categoria deletada.")
+        if len(result) is not None:
+            query = "DELETE FROM Categoria WHERE id = ?"
+            cur.execute(query, (result[0],))
+            print("Categoria deletada.")
+        else:
+            print("Não existe esta categoria.")
+
+deletar_categoria("Pessoal")
         
 # Deletar Sub-Categoria
 def deletar_subCategoria(i):
@@ -263,4 +269,7 @@ def ver_dadosLancamento():
 
     return lista
 
+print(ver_dadosCategoria())
+print(ver_dadosSubCategoria())
+print(ver_dadosBanco())
 print(ver_dadosLancamento())
