@@ -2,45 +2,50 @@ import sqlite3 as lite
 
 # Criando conexão com o banco
 con = lite.connect('dados.db')
+cur = con.cursor()
+
+item_categoria = "SELECT id FROM Categoria WHERE nome = ?"
+item_subCategoria = "SELECT id FROM SubCategoria WHERE nome = ?"
+item_banco = "SELECT id FROM Banco WHERE nome = ?"
+item_lancamento = "SELECT id FROM Lancamento WHERE nome = ?"
 
 # Inserção de dados------------------------------------
 
 # Categorias
-def inserir_categoria(i):
+def inserir_categoria(nome):
     with con:
-        cur = con.cursor()
-        item = "SELECT nome FROM Categoria WHERE nome = ?"
-        cur.execute(item, (i,)) # Parâmetro passado em forma de tuplas
+        cur.execute(item_categoria, (nome,)) # Parâmetro passado em forma de tuplas
         result = cur.fetchall()
         if len(result)!=0:
             print("Categoria já existe.")
         else:
             #Insere a categoria
             query = "INSERT INTO Categoria (nome) VALUES (?)"
-            cur.execute(query, (i,))
+            cur.execute(query, (nome,))
             print("Cadastro da Categoria feita!")
 
-#inserir_categoria("Pessoal")
+#inserir_categoria("Investimento")
             
 # Sub-categorias
-def inserir_subCategoria(i, j):
+def inserir_subCategoria(categoria, novaSubCategoria):
     with con:
-        cur = con.cursor()
+        cur.execute(item_subCategoria, (novaSubCategoria,))
+        result_sub = cur.fetchall()
+        cur.execute(item_categoria, (categoria,))
+        result_cat = cur.fetchone()
 
-        # Verifica se a categoria existe
-        item = "SELECT id FROM subCategoria WHERE nome = ?"
-        cur.execute(item, (j,))
-        result = cur.fetchall()
-
-        if len(result) != 0:
-            print("Sub-Categoria já existe.")
+        if len(result_cat) is not None:
+            if len(result_sub) != 0:
+                print("Sub-Categoria já existe.")
+            else:
+                #Insere a sub-categoria
+                query = "INSERT INTO SubCategoria (categoria_id, nome) VALUES (?, ?)"
+                cur.execute(query, (result_cat[0], novaSubCategoria))
+                print("Cadastro da Sub-Categoria feita!")
         else:
-            #Insere a sub-categoria
-            query = "INSERT INTO SubCategoria (categoria_id, nome) VALUES (?, ?)"
-            cur.execute(query, (i, j))
-            print("Cadastro da Sub-Categoria feita!")
+            print("Categoria não existe.")
 
-#inserir_subCategoria("Pessoal", "Presente")
+inserir_subCategoria("Moradia", "Água")
 
 # Bancos
 def inserir_banco(i):
@@ -138,7 +143,7 @@ def alterar_categoria(i, j):
 #alterar_categoria("Pessoal", "Tecnologia")
             
 # Alterar dados da sub-categoria
-def alterar_SubCategoria(i, j):
+def alterar_subCategoria(i, j):
     with con:
         cur = con.cursor()
         query = "SELECT nome FROM SubCategoria WHERE nome = ?"
@@ -156,9 +161,40 @@ def alterar_SubCategoria(i, j):
         else:
             print("Sub-Categoria não existe", result)
 
-#alterar_SubCategoria("Internet", "Presente")
+#alterar_subCategoria("Internet", "Presente")
             
 # Alterar dados do banco
+def alterar_banco(nome_novo, valor_novo, nome):
+    with con:
+        cur = con.cursor()
+        """ query_nome = "SELECT nome FROM Banco WHERE nome = ?" """
+        """ query_valor = "SELECT saldoinicial FROM Banco WHERE nome = ?" """
+        """ cur.execute(query_nome, (nome,)) """
+        """ result_nome = cur.fetchall() """
+        """ cur.execute(query_valor, (nome,))
+        result_valor = cur.fetchall() """
+        """ if result_nome != 0: """
+        query_novoNome = "UPDATE Banco SET nome = ? WHERE nome = ?"
+        query_novoValor = "UPDATE Banco SET saldoinicial = ? WHERE nome = ?"
+        cur.execute(query_novoValor, (valor_novo, nome))
+        cur.execute(query_novoNome, (nome_novo, nome))
+        print("Banco alterado.")
+        """ else: """
+        #print("Dados incorretos. Não existe no Banco.")
+
+#alterar_banco("Itaú", 500.00, "Itaú")
+            
+# Alterar dados do lançamento
+def alterar_lancamento(novo_categoria,
+                       nova_subCategoria,
+                       novo_banco,
+                       nova_data, 
+                       nova_descricao,
+                       novo_valor,
+                       novo_tipo,
+                       descricao):
+    with con:
+        cur = con.cursor()
 
 
 # Ver Dados----------------------------------------
@@ -215,4 +251,5 @@ def ver_dadosLancamento():
 
     return lista
 
-print(ver_dadosBanco())
+print(ver_dadosCategoria())
+print(ver_dadosSubCategoria())
