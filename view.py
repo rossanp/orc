@@ -7,7 +7,7 @@ cur = con.cursor()
 item_categoria = "SELECT id FROM Categoria WHERE nome = ?"
 item_subCategoria = "SELECT id FROM SubCategoria WHERE nome = ?"
 item_banco = "SELECT id FROM Banco WHERE nome = ?"
-item_lancamento = "SELECT id FROM Lancamento WHERE nome = ?"
+item_lancamento = "SELECT id FROM Lancamento WHERE descricao = ?"
 
 # Inserção de dados------------------------------------
 
@@ -16,6 +16,7 @@ def inserir_categoria(nome):
     with con:
         cur.execute(item_categoria, (nome,)) # Parâmetro passado em forma de tuplas
         result = cur.fetchall()
+        # Verifica se a categoria existe
         if len(result)!=0:
             print("Categoria já existe.")
         else:
@@ -27,7 +28,8 @@ def inserir_categoria(nome):
 #inserir_categoria("Investimento")
             
 # Sub-categorias
-def inserir_subCategoria(categoria, novaSubCategoria):
+def inserir_subCategoria(categoria,
+                         novaSubCategoria):
     with con:
         cur.execute(item_subCategoria, (novaSubCategoria,))
         result_sub = cur.fetchall()
@@ -45,15 +47,12 @@ def inserir_subCategoria(categoria, novaSubCategoria):
         else:
             print("Categoria não existe.")
 
-inserir_subCategoria("Moradia", "Água")
+#inserir_subCategoria("Moradia", "Água")
 
 # Bancos
-def inserir_banco(i):
+def inserir_banco(nome):
     with con:
-        cur = con.cursor()
-        # Verifica se a categoria existe
-        item = "SELECT nome FROM Banco WHERE nome = ?"
-        cur.execute(item, (i,))
+        cur.execute(item_banco, (nome,))
         result = cur.fetchall()
 
         if len(result)!=0:
@@ -61,23 +60,36 @@ def inserir_banco(i):
         else:
             #Insere o banco
             query = "INSERT INTO Banco (nome, saldoinicial) VALUES (?, 0.00)"
-            cur.execute(query, (i,))
+            cur.execute(query, (nome,))
             print("Cadastro do Banco feito!")
 
 #inserir_banco("Bradesco")
 
 # Lançamentos
-def inserir_lancamento(i, j, k, l, m, n, o):
+def inserir_lancamento(data,
+                       descricao,
+                       valor,
+                       tipo,
+                       categoria,
+                       subcategoria,
+                       banco):
     with con:
-        cur = con.cursor()
-        
-        #Insere o lançamento
-        query = "INSERT INTO Lancamento (data, descricao, valor, tipo, categoria_id, subCategoria_id, banco_id) VALUES (?, ?, ?, ?, ?, ?, ?)"
-        cur.execute(query, (i, j, k, l, m, n, o))
-        print("Cadastro de Lançamentos feitos!")
+        cur.execute(item_categoria, (categoria,))
+        result_cat = cur.fetchone()
+        cur.execute(item_subCategoria, (subcategoria,))
+        result_sub = cur.fetchone()
+        cur.execute(item_banco, (banco,))
+        result_banco = cur.fetchone()
 
+        if len(result_cat) and len(result_sub) and len(result_banco) is not None:
+            #Insere o lançamento
+            query = "INSERT INTO Lancamento (data, descricao, valor, tipo, categoria_id, subCategoria_id, banco_id) VALUES (?, ?, ?, ?, ?, ?, ?)"
+            cur.execute(query, (data, descricao, valor, tipo, result_cat[0], result_sub[0], result_banco[0]))
+            print("Cadastro de Lançamentos feitos!")
+        else:
+            print("Valores invalidos.")
 
-#inserir_lancamento("16/01/2024", "Saaetri", -24.63, "Despesa", "Moradia", "Luz", "Itaú")
+#inserir_lancamento("2024-01-16", "Saaetri", -24.63, "Despesa", "Moradia", "Luz", "Itaú")
 
 # Deletar dados------------------------------------
 
@@ -251,5 +263,4 @@ def ver_dadosLancamento():
 
     return lista
 
-print(ver_dadosCategoria())
-print(ver_dadosSubCategoria())
+print(ver_dadosLancamento())
